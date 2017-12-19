@@ -1,5 +1,5 @@
 # vim:set ft=dockerfile:
-FROM debian:jessie
+FROM debian:stretch
 
 RUN set -ex; \
 	if ! command -v gpg > /dev/null; then \
@@ -46,8 +46,8 @@ RUN set -ex; \
 	rm -rf "$GNUPGHOME"; \
 	apt-key list
 
-ENV PG_MAJOR 9.4
-ENV PG_VERSION 9.4.15-1.pgdg80+1
+ENV PG_MAJOR 10
+ENV PG_VERSION 10.1-1.pgdg90+1
 
 RUN set -ex; \
 	\
@@ -55,13 +55,13 @@ RUN set -ex; \
 	case "$dpkgArch" in \
 		amd64|i386|ppc64el) \
 # arches officialy built by upstream
-			echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main $PG_MAJOR" > /etc/apt/sources.list.d/pgdg.list; \
+			echo "deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main $PG_MAJOR" > /etc/apt/sources.list.d/pgdg.list; \
 			apt-get update; \
 			;; \
 		*) \
 # we're on an architecture upstream doesn't officially build for
 # let's build binaries from their published source packages
-			echo "deb-src http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main $PG_MAJOR" > /etc/apt/sources.list.d/pgdg.list; \
+			echo "deb-src http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main $PG_MAJOR" > /etc/apt/sources.list.d/pgdg.list; \
 			\
 			tempDir="$(mktemp -d)"; \
 			cd "$tempDir"; \
@@ -103,7 +103,6 @@ RUN set -ex; \
 	sed -ri 's/#(create_main_cluster) .*$/\1 = false/' /etc/postgresql-common/createcluster.conf; \
 	apt-get install -y \
 		"postgresql-$PG_MAJOR=$PG_VERSION" \
-		"postgresql-contrib-$PG_MAJOR=$PG_VERSION" \
 	; \
 	\
 	rm -rf /var/lib/apt/lists/*; \
