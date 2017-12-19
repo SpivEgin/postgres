@@ -24,7 +24,7 @@ install:
 before_script:
   - env | sort
   - cd "$VERSION/$VARIANT"
-  - image="postgres:${VERSION}${VARIANT:+-${VARIANT}}"
+  - image="quay.io/spivegin/postgres:${VERSION}${VARIANT:+-${VARIANT}}"
 
 script:
   - |
